@@ -32,7 +32,7 @@ def scrape():
     # Update the Mongo database using update and upsert=True
 
     # Redirect back to home page
-    return redirect("/" code=302)
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True)
