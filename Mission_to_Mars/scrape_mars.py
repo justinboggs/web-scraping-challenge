@@ -20,7 +20,7 @@ def scrape_news():
     time.sleep(3)
 
     html_news = browser.html
-    soup = BeautifulSoup(html_news, 'html.parser')
+    soup = bs(html_news, 'html.parser')
 
     news_title = soup.find('div', class_='list_text').find('div', class_='content_title').find('a').text
     news_paragraph = soup.find('div', class_='article_teaser_body').text
@@ -34,14 +34,14 @@ def scrape_news():
 
 def scrape_image():
 
-    browser = init.browser()
+    browser = init_browser()
 
     space_image_url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
     browser.visit(space_image_url)
     time.sleep(3)
 
     html_image = browser.html
-    soup = BeautifulSoup(html_image, 'html.parser')
+    soup = bs(html_image, 'html.parser')
 
     featured_image_url = soup.find('article')['style'].replace('background-image: url(','').replace(');','')[1:-1]
 
