@@ -28,9 +28,11 @@ def scrape_news():
     mars_data['news_title'] = news_title
     mars_data['news_paragraph'] = news_paragraph
 
+    browser.quit()
+
     return mars_data
 
-    browser.quit()
+
 
 def scrape_image():
 
