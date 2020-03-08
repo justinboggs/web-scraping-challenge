@@ -57,3 +57,75 @@ def scrape_image():
 
     browser.quit()
 
+def scrape_weather():
+
+    browser = init_browser()
+
+    twitter_url = "https://twitter.com/marswxreport?lang=en"
+    browser.visit(twitter_url)
+    time.sleep(3)
+
+    twitter_html_content = requests.get(twitter_url).text
+    soup = bs(twitter_html_content, 'lxml')
+
+    tweet_list = soup.find_all('div', class_="js-tweet-text-container")
+    holds_tweet = []
+    for tweets in tweet_list: 
+        tweet_body = tweets.find('p').text
+        if 'InSight' and 'sol' in tweet_body:
+            holds_tweet.append(tweet_body)
+            break
+        else: 
+            pass
+
+    mars_weather = ([holds_tweet[0]][0][:-26])
+    tweet_img_link = ([holds_tweet[0]][0][-26:])
+
+    mars_data['mars_weather'] = mars_weather
+    mars_data['tweet_img_link'] = tweet_img_link
+
+    return mars_data
+
+    browser.quit()
+
+def scrape_facts():
+
+    browser = init_browser()
+
+    facts_url = 'https://space-facts.com/mars/'
+    browser.visit(facts_url)
+    time.sleep(3)
+
+    mars_data = pd.read_html(facts_url)
+    mars_facts = mars_data[0]
+    mars_facts.columns = ['Description', 'Value']
+
+    mars_facts.to_html('mars_facts.html')
+
+    browser.quit()
+
+def scrape_hemi():
+
+    browser = init_browser()
+
+    hemi_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(hemi_url)
+    time.sleep(3)
+
+    html_image = browser.html
+    soup = bs(html_image, 'html.parser')
+    images = soup.find_all('div', class_='item')
+    hemi_images = []
+    hemi_main_url = 'https://astrogeology.usgs.gov/'
+
+    for img in images:
+        hemi_title = img.find('h3').text
+        hemi_url = img.find('a', class_='itemLink product-item')['href']
+        browser.visit(hemi_main_url + hemi_url)
+        time.sleep(3)
+        hemi_url = browser.html
+        soup = bs(hemi_url, 'html.parser')
+        full_url = hemi_main_url + soup.find('img', class_='wide-image')['src']
+        hemi_images.append({'title': hemi_title, 'img_url': full_url})
+
+    hemi_images
