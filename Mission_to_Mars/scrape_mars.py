@@ -99,11 +99,11 @@ def scrape():
 
     #Store all gathered data
     mars_final = {
-        "Mars News Title": news_title,
-        "Mars News Paragraph": news_paragraph,
-        "Mars Featured Image": featured_image_url,
-        "Mars Weather": mars_weather,
-        "Mars Hemispheres": hemi_images
+        news_title,
+        news_paragraph,
+        featured_image_url,
+        mars_weather,
+        hemi_images
     }
 
     browser.quit()
