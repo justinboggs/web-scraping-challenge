@@ -12,10 +12,10 @@ mongo = PyMongo(app, uri="mongodb://localhost:27017/mars_scraper")
 @app.route("/")
 def home():
 
-    mars_final = mongo.db.mars_collection.find_one()
+    mars_data = mongo.db.mars_collection.find_one()
 
     # Return template and data
-    return render_template("index.html", mars_scrape=mars_final)
+    return render_template("index.html", mars_scrape=mars_data)
 
 # Route that will trigger the scrape function
 @app.route("/scrape")
