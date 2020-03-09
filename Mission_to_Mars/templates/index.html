@@ -10,13 +10,17 @@
 </head>
 
 <body>
-    <div class="jumbotron text-center">
-        <h1 class="display-4">Mission To Mars</h1>
-        <a class="btn btn-primary btn-lg" href="../scrape" role="button">Scrape New Data</a>
+    <div class="container-fluid">
+        <div class="jumbotron text-center">
+            <h1>Mission To Mars</h1>
+            <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Scrape New Data</a></p>
+        </div>
+        <img src="{{ vacation.sloth_img }}" alt="Sloth">
+        <h2>The typical weather in Costa Rica is:</h2>
+        <h3>Max Temp: {{ vacation.max_temp }}</h3>
+        <h3>Min Temp: {{ vacation.min_temp }}</h3>
     </div>
-
-
-    
+    </div>
 </body>
 
 </html>
