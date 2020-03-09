@@ -3,15 +3,15 @@ from splinter import Browser
 import time
 import pandas as pd 
 import requests
-
+import pymongo
 
 def init_browser():
     executable_path = {"executable_path": "chromedriver"}
-    return Browser("chrome", **executable_path, headless=True)
+    return Browser("chrome", **executable_path, headless=False)
 
 mars_data = {}
 
-def scrape_news():
+def scrape():
     
     browser = init_browser()
 
@@ -19,25 +19,15 @@ def scrape_news():
     browser.visit(news_url)
     time.sleep(3)
 
+    #Mars News
     html_news = browser.html
     soup = bs(html_news, 'html.parser')
 
     news_title = soup.find('div', class_='list_text').find('div', class_='content_title').find('a').text
     news_paragraph = soup.find('div', class_='article_teaser_body').text
 
-    mars_data['news_title'] = news_title
-    mars_data['news_paragraph'] = news_paragraph
 
-    browser.quit()
-
-    return mars_data
-
-
-
-def scrape_image():
-
-    browser = init_browser()
-
+    #Mars Image
     space_image_url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
     browser.visit(space_image_url)
     time.sleep(3)
@@ -51,16 +41,8 @@ def scrape_image():
 
     featured_image_url = nasa_main_url + featured_image_url
 
-    mars_data['featured_image_url'] = featured_image_url
 
-    return mars_data
-
-    browser.quit()
-
-def scrape_weather():
-
-    browser = init_browser()
-
+    #Mars Twitter
     twitter_url = "https://twitter.com/marswxreport?lang=en"
     browser.visit(twitter_url)
     time.sleep(3)
@@ -81,33 +63,19 @@ def scrape_weather():
     mars_weather = ([holds_tweet[0]][0][:-26])
     tweet_img_link = ([holds_tweet[0]][0][-26:])
 
-    mars_data['mars_weather'] = mars_weather
-    mars_data['tweet_img_link'] = tweet_img_link
 
-    return mars_data
-
-    browser.quit()
-
-def scrape_facts():
-
-    browser = init_browser()
-
+    # Mars Facts
     facts_url = 'https://space-facts.com/mars/'
     browser.visit(facts_url)
     time.sleep(3)
 
     mars_data = pd.read_html(facts_url)
     mars_facts = mars_data[0]
-    mars_facts.columns = ['Description', 'Value']
+    mars_facts.columns = ['Description', 'Stats']
+    mars_facts = mars_facts.to_html()
 
-    mars_facts.to_html('mars_facts.html')
 
-    browser.quit()
-
-def scrape_hemi():
-
-    browser = init_browser()
-
+    #Mars Hemispheres
     hemi_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     browser.visit(hemi_url)
     time.sleep(3)
@@ -128,4 +96,16 @@ def scrape_hemi():
         full_url = hemi_main_url + soup.find('img', class_='wide-image')['src']
         hemi_images.append({'title': hemi_title, 'img_url': full_url})
 
-    hemi_images
+
+    #Store all gathered data
+    mars_final = {
+        "Mars News Title": news_title,
+        "Mars News Paragraph": news_paragraph,
+        "Mars Featured Image": featured_image_url,
+        "Mars Weather": mars_weather,
+        "Mars Hemispheres": hemi_images
+    }
+
+    browser.quit()
+
+    return mars_final

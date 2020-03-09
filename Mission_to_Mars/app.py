@@ -13,20 +13,20 @@ mongo = PyMongo(app)
 @app.route("/")
 def home():
 
-    mars_scrape = mongo.db.mars.find_one()
+    mars_final = mongo.db.mars_collection.find_one()
 
     # Return template and data
-    return render_template("index.html", mars_scrape=mars_scrape)
+    return render_template("index.html", mars_scrape=mars_final)
 
 # Route that will trigger the scrape function
 @app.route("/scrape")
 def scrape():
 
     # Run the scrape function
-    mars_scrape = scrape_mars.scrape_news
+    mars_final = scrape_mars.scrape
 
     # Update the Mongo database using update and upsert=True
-    mars.update({}, mars_scrape, upsert=True)
+    mongo.db.mars_collection.update({}, mars_final, upsert=True)
 
     # Redirect back to home page
     return redirect("/")
