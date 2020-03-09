@@ -6,8 +6,7 @@ import os
 # create instance of Flask app
 app = Flask(__name__)
 
-app.config["MONGO_URI"] = "mongodb://localhost:27017/mars_scraper"
-mongo = PyMongo(app)
+mongo = PyMongo(app, uri="mongodb://localhost:27017/mars_scraper")
 
 # Route to render index.html template using data from Mongo
 @app.route("/")
